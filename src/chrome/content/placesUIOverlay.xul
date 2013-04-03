@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE overlay [
+  <!ENTITY % overlayDTD SYSTEM "chrome://BookmarkQuickMover/locale/BookmarkQuickMover.dtd">
+  %overlayDTD;
+]>
+
+<?xul-overlay href="chrome://browser/content/places/placesOverlay.xul"?>
+
+<overlay id="BookmarkQuickMover"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+    <keyset id="mainKeyset">
+        <key id="key_placesCmd_moveBookmarks"
+             command="placesCmd_moveBookmarks"
+             keycode="VK_M" modifiers="accel" />
+    </keyset>
+
+    <keyset id="placesOrganizerKeyset">
+        <key id="key_placesCmd_moveBookmarks"
+             command="placesCmd_moveBookmarks"
+             keycode="VK_M" modifiers="accel" />
+    </keyset>
+
+    <popup id="placesContext">
+        <menuitem id="placesContext_BookmarkQuickMover"
+                  command="placesCmd_moveBookmarks"
+                  key="key_placesCmd_moveBookmarks"
+                  label="&placesContext_BookmarkQuickMover.label;"
+                  accesskey="&placesContext_BookmarkQuickMover.accesskey;"
+                  insertafter="placesContext_editSeparator"
+                  selection="bookmark|folder" />
+
+        <menuseparator id="placesContext_moveSeparator"
+                       insertafter="placesContext_BookmarkQuickMover" />
+    </popup>
+
+</overlay>

@@ -1,0 +1,4 @@
+build/
+*.xpi
+*.komodoproject
+Makefile.install

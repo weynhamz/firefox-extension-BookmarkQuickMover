@@ -52,6 +52,11 @@ BookmarkQuickMover.placesUIOverlay = {
   },
 
   command: function(aEvent) {
+    // Do not respond to non-menuitem elements
+    if (aEvent.target.nodeName != "menuitem") {
+      return false;
+    }
+
     var targetNodes = PlacesUIUtils.getViewForNode(document.popupNode).selectedNodes;
     var targetItemId = PlacesUtils.getConcreteItemId(aEvent.target._placesNode);
 

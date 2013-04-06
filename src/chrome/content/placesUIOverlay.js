@@ -4,7 +4,10 @@ if ("undefined" == typeof(BookmarkQuickMover)) {
 
     get stringBundle() {
       if (!this._stringBundle)
-        this._stringBundle = document.getElementById("BookmarkQuickMover-string-bundle");
+        this._stringBundle =
+          document.getElementById("BookmarkQuickMover-string-bundle") ?
+          document.getElementById("BookmarkQuickMover-string-bundle") :
+          parent.document.getElementById("BookmarkQuickMover-string-bundle");
 
       return this._stringBundle;
     },

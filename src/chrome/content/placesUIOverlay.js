@@ -57,6 +57,12 @@ BookmarkQuickMover.placesUIOverlay = {
       return false;
     }
 
+    // The destination node has to be a bookmark folder
+    if (aEvent.target._placesNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER &&
+        aEvent.target._placesNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
+      return false;
+    }
+
     var targetNodes = PlacesUIUtils.getViewForNode(document.popupNode).selectedNodes;
     var targetItemId = PlacesUtils.getConcreteItemId(aEvent.target._placesNode);
 

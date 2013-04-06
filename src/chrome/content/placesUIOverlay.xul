@@ -9,6 +9,16 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="BookmarkQuickMover-string-bundle"
+                      src="chrome://BookmarkQuickMover/locale/BookmarkQuickMover.properties" />
+    </stringbundleset>
+
+    <stringbundleset id="placesStringSet">
+        <stringbundle id="BookmarkQuickMover-string-bundle"
+                      src="chrome://BookmarkQuickMover/locale/BookmarkQuickMover.properties" />
+    </stringbundleset>
+
     <!-- We need to reference this script because it is not there in
          Bookmarks Manager. We need to extend PlacesMenu to have a
          customized bookmark folders menu. -->

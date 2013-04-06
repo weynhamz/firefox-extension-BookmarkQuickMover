@@ -1,5 +1,14 @@
 if ("undefined" == typeof(BookmarkQuickMover)) {
-  var BookmarkQuickMover = {};
+  var BookmarkQuickMover = {
+    _stringBundle: null,
+
+    get stringBundle() {
+      if (!this._stringBundle)
+        this._stringBundle = document.getElementById("BookmarkQuickMover-string-bundle");
+
+      return this._stringBundle;
+    },
+  };
 };
 
 BookmarkQuickMover.placesUIOverlay = {
@@ -112,7 +121,8 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
       && !aPopup._moveHereMenuitem) {
       // Add "Move Here" menuitem
       aPopup._moveHereMenuitem = document.createElement("menuitem");
-      aPopup._moveHereMenuitem.setAttribute("label", "Move Here");
+      aPopup._moveHereMenuitem.setAttribute("label",
+        BookmarkQuickMover.stringBundle.getString("BookmarkQuickMover.MoveHere.label"));
       aPopup._moveHereMenuitem._placesNode = aPopup._placesNode;
       aPopup.insertBefore(aPopup._moveHereMenuitem, aPopup._startMarker);
 

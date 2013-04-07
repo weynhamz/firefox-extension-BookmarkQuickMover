@@ -5,34 +5,38 @@
   %overlayDTD;
 ]>
 
-<?xul-overlay href="chrome://browser/content/places/placesOverlay.xul"?>
-
 <overlay id="BookmarkQuickMover"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
-    <keyset id="mainKeyset">
-        <key id="key_placesCmd_moveBookmarks"
-             command="placesCmd_moveBookmarks"
-             keycode="VK_M" modifiers="accel" />
-    </keyset>
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="BookmarkQuickMover-string-bundle"
+                      src="chrome://BookmarkQuickMover/locale/BookmarkQuickMover.properties" />
+    </stringbundleset>
 
-    <keyset id="placesOrganizerKeyset">
-        <key id="key_placesCmd_moveBookmarks"
-             command="placesCmd_moveBookmarks"
-             keycode="VK_M" modifiers="accel" />
-    </keyset>
+    <stringbundleset id="placesStringSet">
+        <stringbundle id="BookmarkQuickMover-string-bundle"
+                      src="chrome://BookmarkQuickMover/locale/BookmarkQuickMover.properties" />
+    </stringbundleset>
+
+    <!-- We need to reference this script because it is not there in
+         Bookmarks Manager. We need to extend PlacesMenu to have a
+         customized bookmark folders menu. -->
+    <script type="application/x-javascript"
+            src="chrome://browser/content/places/browserPlacesViews.js"/>
+
+    <script type="application/x-javascript"
+            src="chrome://BookmarkQuickMover/content/placesUIOverlay.js" />
 
     <popup id="placesContext">
-        <menuitem id="placesContext_BookmarkQuickMover"
-                  command="placesCmd_moveBookmarks"
-                  key="key_placesCmd_moveBookmarks"
-                  label="&placesContext_BookmarkQuickMover.label;"
-                  accesskey="&placesContext_BookmarkQuickMover.accesskey;"
-                  insertafter="placesContext_editSeparator"
-                  selection="bookmark|folder" />
-
-        <menuseparator id="placesContext_moveSeparator"
+        <menu id="placesContext_BookmarkQuickMover"
+              label="&placesContext_BookmarkQuickMover.label;"
+              accesskey="&placesContext_BookmarkQuickMover.accesskey;"
+              insertafter="placesContext_editSeparator"
+              selection="bookmark|folder" >
+            <menupopup placespopup="true" />
+        </menu>
+        <menuseparator id="placesContext_BookmarkQuickMover_Separator"
                        insertafter="placesContext_BookmarkQuickMover" />
     </popup>
 

@@ -106,14 +106,7 @@ BookmarkQuickMover.placesUIOverlay = {
  * builtin PlacesMenu view.
  **/
 BookmarkQuickMover.PlacesFoldersMenu = function (aPopupShowingEvent, aPlace) {
-  this._rootElt = aPopupShowingEvent.target;  // <menupopup>
-  this._viewElt = this._rootElt.parentNode;   // parent <menu>
-  this._viewElt._placesView = this;
-  this._addEventListeners(this._rootElt, ["popupshowing", "popuphidden"], true);
-  this._addEventListeners(window, ["unload"], false);
-
-  PlacesViewBase.call(this, aPlace);
-  this._onPopupShowing(aPopupShowingEvent);
+  PlacesMenu.apply(this,arguments);
 };
 
 BookmarkQuickMover.PlacesFoldersMenu.prototype = {

@@ -240,6 +240,18 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
     // Let the original _rebuildPopup method do the reset of work
     return PlacesMenu.prototype._rebuildPopup.apply(this, arguments);
   },
+
+  /**
+   * Prevent the original method from adding an "Open All in Tabs"
+   * menuitem to the bottom of the popup.
+   *
+   * @param aPopup
+   *        a Places popup.
+   **/
+  _mayAddCommandsItems:
+  function PVB__mayAddCommandsItems(aPopup) {
+    return false;
+  },
 };
 
 window.addEventListener('load', BookmarkQuickMover.placesUIOverlay, false);

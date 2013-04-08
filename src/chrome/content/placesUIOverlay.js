@@ -1,17 +1,5 @@
 if ("undefined" == typeof(BookmarkQuickMover)) {
-  var BookmarkQuickMover = {
-    _stringBundle: null,
-
-    get stringBundle() {
-      if (!this._stringBundle)
-        this._stringBundle =
-          document.getElementById("BookmarkQuickMover-string-bundle") ?
-          document.getElementById("BookmarkQuickMover-string-bundle") :
-          parent.document.getElementById("BookmarkQuickMover-string-bundle");
-
-      return this._stringBundle;
-    },
-  };
+  var BookmarkQuickMover = {};
 };
 
 BookmarkQuickMover.placesUIOverlay = {
@@ -28,6 +16,18 @@ BookmarkQuickMover.placesUIOverlay = {
       this._foldersMenu = document.getElementById("placesContext_BookmarkQuickMover");
 
     return this._foldersMenu;
+  },
+
+  _stringBundle: null,
+
+  get stringBundle() {
+    if (!this._stringBundle)
+      this._stringBundle =
+        document.getElementById("BookmarkQuickMover-string-bundle") ?
+        document.getElementById("BookmarkQuickMover-string-bundle") :
+        parent.document.getElementById("BookmarkQuickMover-string-bundle");
+
+    return this._stringBundle;
   },
 
   handleEvent: function(aEvent) {
@@ -220,7 +220,8 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
       // Add "Move Here" menuitem
       aPopup._moveToThisFolderMenuitem = document.createElement("menuitem");
       aPopup._moveToThisFolderMenuitem.setAttribute("label",
-        BookmarkQuickMover.stringBundle.getString("BookmarkQuickMover.MoveToThisFolder.label"));
+        BookmarkQuickMover.placesUIOverlay.stringBundle.getString(
+          "BookmarkQuickMover.MoveToThisFolder.label"));
       aPopup.insertBefore(aPopup._moveToThisFolderMenuitem, aPopup._startMarker);
 
       // Add "Move to New SubFolder" menuitem

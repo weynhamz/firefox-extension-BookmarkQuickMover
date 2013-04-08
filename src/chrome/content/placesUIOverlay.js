@@ -134,12 +134,12 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
     var addSeparater = aPopup._placesNode.childCount > 0 ? true : false;
 
     if (aPopup != this._rootElt   // The command items are never added to the root popup
-      && !aPopup._moveHereMenuitem) {
+      && !aPopup._moveToThisFolderMenuitem) {
       // Add "Move Here" menuitem
-      aPopup._moveHereMenuitem = document.createElement("menuitem");
-      aPopup._moveHereMenuitem.setAttribute("label",
-        BookmarkQuickMover.stringBundle.getString("BookmarkQuickMover.MoveHere.label"));
-      aPopup.insertBefore(aPopup._moveHereMenuitem, aPopup._startMarker);
+      aPopup._moveToThisFolderMenuitem = document.createElement("menuitem");
+      aPopup._moveToThisFolderMenuitem.setAttribute("label",
+        BookmarkQuickMover.stringBundle.getString("BookmarkQuickMover.MoveToThisFolder.label"));
+      aPopup.insertBefore(aPopup._moveToThisFolderMenuitem, aPopup._startMarker);
 
       // Add a menuseparater if there are other folders
       if (addSeparater) {

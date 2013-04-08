@@ -60,24 +60,28 @@ BookmarkQuickMover.placesUIOverlay = {
       return false;
     }
 
+    var targetNodes = PlacesUIUtils.getViewForNode(document.popupNode).selectedNodes;
+    var targetFolder = aEvent.target.parentNode;
+    var targetFolderNode = targetFolder._placesNode;
+    var targetFolderItemId = null;
+
     // The destination node has to be a bookmark folder
-    if (aEvent.target.parentNode._placesNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER &&
-        aEvent.target.parentNode._placesNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
+    if (targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER &&
+        targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
       return false;
     }
 
-    var targetNodes = PlacesUIUtils.getViewForNode(document.popupNode).selectedNodes;
-    var targetItemId = PlacesUtils.getConcreteItemId(aEvent.target.parentNode._placesNode);
+    targetFolderItemId = PlacesUtils.getConcreteItemId(targetFolderNode);
 
     var transactions = [];
     for (var i=0; i < targetNodes.length; i++) {
       // Nothing to do if the node is already under the selected folder
-      if (targetNodes[i].parent.itemId == targetItemId)
+      if (targetNodes[i].parent.itemId == targetFolderItemId)
         continue;
 
       let txn = new PlacesMoveItemTransaction(
         targetNodes[i].itemId,
-        targetItemId,
+        targetFolderItemId,
         PlacesUtils.bookmarks.DEFAULT_INDEX
       );
 

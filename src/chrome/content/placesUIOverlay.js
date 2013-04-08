@@ -124,7 +124,7 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
   function PVB__rebuildPopup(aPopup) {
     var addSeparater = aPopup._placesNode.childCount > 0 ? true : false;
 
-    if (aPopup._placesNode.bookmarkIndex != -1
+    if (aPopup != this._rootElt   // The command items are never added to the root popup
       && !aPopup._moveHereMenuitem) {
       // Add "Move Here" menuitem
       aPopup._moveHereMenuitem = document.createElement("menuitem");

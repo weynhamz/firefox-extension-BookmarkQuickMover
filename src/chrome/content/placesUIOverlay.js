@@ -73,6 +73,20 @@ BookmarkQuickMover.placesUIOverlay = {
 
     targetFolderItemId = PlacesUtils.getConcreteItemId(targetFolderNode);
 
+    if (targetNodes && targetFolderItemId)
+      this.movePlacesNodes(targetNodes,targetFolderItemId);
+
+    return false;
+  },
+
+  // Using our customized places menu view to show a popup
+  // menu with only bookmark folders.
+  popupshowing: function(aEvent) {
+    if (!this.foldersMenu._placesView)
+      new BookmarkQuickMover.PlacesFoldersMenu(aEvent, "place:excludeItems=1&excludeQueries=1&excludeReadOnlyFolders=1&folder=" + PlacesUIUtils.allBookmarksFolderId);
+  },
+
+  movePlacesNodes: function(targetNodes, targetFolderItemId) {
     var transactions = [];
     for (var i=0; i < targetNodes.length; i++) {
       // Nothing to do if the node is already under the selected folder
@@ -92,15 +106,6 @@ BookmarkQuickMover.placesUIOverlay = {
       let txn = new PlacesAggregatedTransaction("Move Items", transactions);
       PlacesUtils.transactionManager.doTransaction(txn);
     }
-
-    return false;
-  },
-
-  // Using our customized places menu view to show a popup
-  // menu with only bookmark folders.
-  popupshowing: function(aEvent) {
-    if (!this.foldersMenu._placesView)
-      new BookmarkQuickMover.PlacesFoldersMenu(aEvent, "place:excludeItems=1&excludeQueries=1&excludeReadOnlyFolders=1&folder=" + PlacesUIUtils.allBookmarksFolderId);
   },
 };
 

@@ -15,6 +15,12 @@ if ("undefined" == typeof(BookmarkQuickMover)) {
 };
 
 BookmarkQuickMover.placesUIOverlay = {
+  _placesView: null,
+
+  get placesView() {
+    return this._placesView;
+  },
+
   _foldersMenu: null,
 
   get foldersMenu() {
@@ -65,13 +71,27 @@ BookmarkQuickMover.placesUIOverlay = {
     var targetFolderNode = targetFolder._placesNode;
     var targetFolderItemId = null;
 
-    // The destination node has to be a bookmark folder
-    if (targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER &&
-        targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
-      return false;
+    // Move to the target folder
+    if (aEvent.target == aEvent.target.parentNode._moveToThisFolderMenuitem) {
+      // The destination node has to be a bookmark folder
+      if (targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER &&
+          targetFolderNode.type != Ci.nsINavHistoryResultNode.RESULT_TYPE_FOLDER_SHORTCUT) {
+        return false;
+      }
+      targetFolderItemId = PlacesUtils.getConcreteItemId(targetFolderNode);
     }
-
-    targetFolderItemId = PlacesUtils.getConcreteItemId(targetFolderNode);
+    // Move to a new sub folder in the target folder
+    else if (aEvent.target == aEvent.target.parentNode._moveToNewSubFolderMenuitem) {
+      // Set the target folder node as insert point
+      this._placesView.insertionPoint = targetFolderNode;
+      // Okay, let's created the desired folder
+      this.goDoCommand("placesCmd_new:folder");
+      // Places controller will pass the item id of the newly
+      // created node to the View's 'selectItems' method. In our
+      // customized menu view, this method will store the given
+      // items into a property called selectedItems.
+      targetFolderItemId = this._placesView.selectedItems[0];
+    }
 
     if (targetNodes && targetFolderItemId)
       this.movePlacesNodes(targetNodes,targetFolderItemId);
@@ -82,8 +102,18 @@ BookmarkQuickMover.placesUIOverlay = {
   // Using our customized places menu view to show a popup
   // menu with only bookmark folders.
   popupshowing: function(aEvent) {
-    if (!this.foldersMenu._placesView)
+    if (!this.foldersMenu._placesView) {
       new BookmarkQuickMover.PlacesFoldersMenu(aEvent, "place:excludeItems=1&excludeQueries=1&excludeReadOnlyFolders=1&folder=" + PlacesUIUtils.allBookmarksFolderId);
+      // We store this view for later use
+      this._placesView = this.foldersMenu._placesView;
+    }
+  },
+
+  goDoCommand: function(aCommand) {
+    let controller = this._placesView.controllers.getControllerForCommand(aCommand);
+    if (controller && controller.isCommandEnabled(aCommand)) {
+      controller.doCommand(aCommand);
+    }
   },
 
   movePlacesNodes: function(targetNodes, targetFolderItemId) {
@@ -122,6 +152,58 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
   // Extend from PlacesMenu.prototype
   __proto__: PlacesMenu.prototype,
 
+  _selectedItems: null,
+
+  /**
+   * Getter method for 'selectedItems'
+   **/
+  get selectedItems() {
+    return this._selectedItems;
+  },
+
+  _insertionPoint: null,
+
+  /**
+   * Getter method for 'insertionPoint'
+   **/
+  get insertionPoint() {
+    return this._insertionPoint;
+  },
+
+  /**
+   * We mannually set out 'insertionPoint' to make
+   * sure the controller functionality depending on
+   * this works.
+   *
+   * @param container
+   *        a Places node where new node will
+   *        be created into
+   **/
+  set insertionPoint(container) {
+    let isTag = false;
+    let index = PlacesUtils.bookmarks.DEFAULT_INDEX;
+    let orientation = Ci.nsITreeView.DROP_BEFORE;
+    this._insertionPoint = new InsertionPoint(
+      PlacesUtils.getConcreteItemId(container),
+      index,
+      orientation,
+      isTag
+    );
+  },
+
+  /**
+   * Some controller methods will call this method
+   * with their result nodes, so we make sure we
+   * can get them back later.
+   *
+   * @param items
+   *        an array of Places nodes
+   **/
+  selectItems:
+  function(items) {
+    this._selectedItems = items;
+  },
+
   /**
    * By overwriting the _rebuildPopup method, we
    * can add any menuitem into the popup menu.
@@ -140,6 +222,13 @@ BookmarkQuickMover.PlacesFoldersMenu.prototype = {
       aPopup._moveToThisFolderMenuitem.setAttribute("label",
         BookmarkQuickMover.stringBundle.getString("BookmarkQuickMover.MoveToThisFolder.label"));
       aPopup.insertBefore(aPopup._moveToThisFolderMenuitem, aPopup._startMarker);
+
+      // Add "Move to New SubFolder" menuitem
+      aPopup._moveToNewSubFolderMenuitem = document.createElement("menuitem");
+      aPopup._moveToNewSubFolderMenuitem.setAttribute("label",
+        BookmarkQuickMover.placesUIOverlay.stringBundle.getString(
+          "BookmarkQuickMover.MoveToNewSubFolder.label"));
+      aPopup.insertBefore(aPopup._moveToNewSubFolderMenuitem, aPopup._startMarker);
 
       // Add a menuseparater if there are other folders
       if (addSeparater) {
